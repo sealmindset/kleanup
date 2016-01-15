@@ -4,7 +4,6 @@ apt-get autoremove
 apt-get update
 apt-get upgrade -y
 apt-get dist-upgrade -y
-apt-get full-upgrade -y
 if ! [ -x "$(command -v deborphan)" ]; then
   echo 'deborphan is not installed.' >&2
   apt-get install deborphan
