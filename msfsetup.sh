@@ -3,7 +3,7 @@
 # Metasploit initial setup after fresh install
 service postgres status
 if [ "$?" -gt "0" ]; then
-  echo "Not installed".
+  service postgresql start
 else
-  echo "Intalled"
+  msfdb init
 fi
