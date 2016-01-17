@@ -4,7 +4,6 @@
 service postgres status
 if [ "$?" -gt "0" ]; then
   service postgresql start
-  msfdb init
-else
+  update-rc.d postgresql defaults
   msfdb init
 fi
