@@ -4,6 +4,7 @@
 service postgres status
 if [ "$?" -gt "0" ]; then
   service postgresql start
+  service postgresql start
 else
   msfdb init
 fi
