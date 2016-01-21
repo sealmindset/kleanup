@@ -13,13 +13,12 @@ do
     fi
 done
 # Check if postgresql is started
-#if [ $(ps -ef | grep -v grep | grep postgres | wc -l) > 0 ]; then
-if [ $(service postgres status | grep -c "inactive") ]; then
+if [ $(ps -ef | grep -v grep | grep postgres | wc -l) > 0 ]; then
+    echo "Postgresql has been already started"
+else
     echo "Postgresql has not been started"
     service postgresql start
-    update-rc.d postgresql defaults
-else
-    echo "Postgresql has been already started"
+    update-rc.d postgresql defaults    
 fi
 # Check if the msfdb install installed
 if [ $(sudo -u postgres -H -- psql -l | grep msf | wc -l) > 0 ]; then
