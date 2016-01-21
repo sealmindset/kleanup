@@ -14,7 +14,7 @@ do
     fi
 done
 # Check if postgresql is started
-if [ ps auxw | grep $srvname | grep -v grep > /dev/null ]; then
+if [ $(ps auxw | grep $srvname | grep -v grep > /dev/null) -eq 0 ]; then
     echo "Postgresql has not been started"
     service postgresql start
     update-rc.d postgresql defaults
@@ -22,7 +22,7 @@ else
     echo "Postgresql has been already started"
 fi
 # Check if the msfdb install installed
-if [ psql -lqt | cut -d \| -f 1 | grep -w $mdbname ]; then
+if [ $(psql -lqt | cut -d \| -f 1 | grep -w $mdbname) -eq 0 ]; then
     echo "$mdb has already been installed"
 else
     echo "Installing $mdb now"
