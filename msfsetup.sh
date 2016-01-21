@@ -2,7 +2,7 @@
 #
 # Metasploit initial setup after fresh install
 mdbname="msfdb"
-srvname="postgre"
+srvname="postgres"
 # Check if certain packages are installed
 arrayPKG=( postgresql )
 for pkgname in "${arrayPKG[@]}"
