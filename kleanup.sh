@@ -16,3 +16,9 @@ if ! [ -x "$(command -v localepurge)" ]; then
 else
   localepurge
 fi
+if ! [ -x "$(command -v ncdu)" ]; then
+  echo 'ncdu is not installed.' >&2
+  apt-get install ncdu
+else
+  ncdu
+fi
