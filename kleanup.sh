@@ -11,7 +11,7 @@ else
   apt-get remove --purge $(deborphan)
 fi
 if [ $(type git | wc -l) < 1 ]; then
-  echo 'ncdu is not installed.' >&2
+  echo 'git is not installed.' >&2
   apt-get install git
 fi
 if [ $(type localepurge | wc -l) < 1 ]; then
