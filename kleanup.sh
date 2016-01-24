@@ -10,6 +10,10 @@ if ! [ -x "$(command -v deborphan)" ]; then
 else
   apt-get remove --purge $(deborphan)
 fi
+if ! [ -x "$(command -v git)" ]; then
+  echo 'ncdu is not installed.' >&2
+  apt-get install git
+fi
 if ! [ -x "$(command -v localepurge)" ]; then
   echo 'localpurge is not installed.' >&2
   apt-get install localepurge
