@@ -21,7 +21,7 @@ else
   localepurge
 fi
 if [ $(type go | wc -l) -lt 1 ]; then
-  echo 'ncdu is not installed.'
+  echo 'GOTTY is not installed.'
   apt-get install golang
 else
   ncdu
@@ -30,5 +30,5 @@ if [ $(type ncdu | wc -l) -lt 1 ]; then
   echo 'ncdu is not installed.'
   apt-get install ncdu
 else
-  ncdu
+  ncdu /
 fi
