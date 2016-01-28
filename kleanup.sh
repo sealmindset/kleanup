@@ -20,6 +20,12 @@ if [ $(type localepurge | wc -l) -lt 1 ]; then
 else
   localepurge
 fi
+if [ $(type go | wc -l) -lt 1 ]; then
+  echo 'ncdu is not installed.'
+  apt-get install golang
+else
+  ncdu
+fi
 if [ $(type ncdu | wc -l) -lt 1 ]; then
   echo 'ncdu is not installed.'
   apt-get install ncdu
