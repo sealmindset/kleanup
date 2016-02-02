@@ -1,3 +1,5 @@
+#!/bin/bash
+distro=$(lsb_release -si | awk '{ print $1 }')
 apt-get autoclean
 apt-get clean
 apt-get autoremove
@@ -20,11 +22,11 @@ if [ $(type localepurge | wc -l) -lt 1 ]; then
 else
   localepurge
 fi
-if [ $(type go | wc -l) -lt 1 ]; then
-  echo 'GOTTY is not installed.'
-  apt-get install golang
-else
-  ncdu
+if [ $distro == "Kali" ]; then
+  if [ $(type go | wc -l) -lt 1 ]; then
+    echo 'GOTTY is not installed.'
+    apt-get install golang
+  fi
 fi
 if [ $(type ncdu | wc -l) -lt 1 ]; then
   echo 'ncdu is not installed.'
