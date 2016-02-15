@@ -1,1 +1,1 @@
-rdesktop -u offsec -p O5cn16gb3BK 192.168.31.166
+rdesktop -u offsec -p ${pwd} 192.168.31.166
