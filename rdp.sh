@@ -1,1 +1,9 @@
-rdesktop -u offsec -p ${pwd} 192.168.31.166
+#!/bin/bash
+
+echo "What server to dyou want to connect to?"
+read $rdpsrvr
+
+echo "What password should I use?"
+read $password
+
+rdesktop -u offsec -p $password $rdpsrvr
