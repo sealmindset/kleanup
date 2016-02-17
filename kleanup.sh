@@ -8,8 +8,8 @@ apt-get autoremove
 apt-get update
 apt-get upgrade -y
 apt-get dist-upgrade -y
-if [ $version == "Rolling" ]; then
-  if [ $header == "4.3.0"]; then
+if [ $version = "Rolling" ]; then
+  if [ $header = "4.3.0"]; then
     echo 'Header $header is already installed.'
   else
     apt-get install linux-headers-4.3.0-kali-all
@@ -31,7 +31,7 @@ if [ $(type localepurge | wc -l) -lt 1 ]; then
 else
   localepurge
 fi
-if [ $distro == "Kali" ]; then
+if [ $distro = "Kali" ]; then
   if [ $(type go | wc -l) -lt 1 ]; then
     echo 'GOTTY is not installed.'
     apt-get install golang
