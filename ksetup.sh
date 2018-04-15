@@ -15,25 +15,29 @@ else
   echo -e "${GREEN} [!] ${NC} Distribution Upgrade was previously completed."
 fi
 
-# Install HexChat
-if [ $(type hexchat | wc -l) -lt 1 ]; then
-  echo -e "${YELLOW} [!] ${NC} Installing HexChat!"
-  apt-get -y install hexchat
-else
-  echo -e "${GREEN} [!] ${NC} HexChat is already installed"  
-fi
+function installAPT() {
+  arr=("$@")
+  for j in "${arr[@]}";  do
+    if [ $(apt-cache search ${j} | wc -l) -gt 0 ]; then
+      if [ $(dpkg -s ${j} 2>/dev/null | grep Status | wc -l) -eq 0 ]; then
+        echo -e "${YELLOW} [!] ${NC} Installing ${j}!"
+        apt-get -y install ${j}
+      else
+        echo -e "${GREEN} [*] ${NC} ${j} is already installed"  
+      fi
+    else
+      echo -e "${RED} [!!!] ${NC} ${j} cannot be installed using apt the method." 
+    fi
+done
+}
+
+# Install bare
+aptArray=(hexchat exploitdb exploitdb-papers exploitdb-bin-sploits)
+installAPT "${aptArray[@]}"
 
 # Install PhantomJS & Imagemagick
 imgArray=(build-essential chrpath libssl-dev libxft-dev libfreetype6-dev libfreetype6 libfontconfig1-dev libfontconfig1 imagemagick)
-
-for i in "${imgArray[@]}";  do
-if [ $(type $i | wc -l) -lt 1 ]; then
-  echo -e "${YELLOW} [!] ${NC} Installing $i!"
-  apt-get -y install $i
-else
-  echo -e "${GREEN} [!] ${NC} $i is already installed"  
-fi
-done
+installAPT "${imgArray[@]}"
 
 if [ $(type phantomjs | wc -l) -lt 1 ]; then
   echo -e "${YELLOW} [!] ${NC} Installing phantomjs!"
