@@ -15,6 +15,18 @@ else
   echo -e "${GREEN} [!] ${NC} Distribution Upgrade was previously completed."
 fi
 
+if [ ! -d /root/projects ]; then
+  mkdir /root/projects
+fi
+
+if [ ! -d /root/wordlist ]; then
+  mkdir /root/wordlist
+  git clone https://github.com/danielmiessler/RobotsDisallowed.git
+  mv -R RobotsDisallowed /root/wordlist/
+  git clone https://github.com/danielmiessler/SecLists.git
+  mv -R SecLists /root/wordlist/
+fi
+
 function installAPT() {
   arr=("$@")
   for j in "${arr[@]}";  do
@@ -46,4 +58,8 @@ if [ $(type phantomjs | wc -l) -lt 1 ]; then
   ln -s /usr/local/share/phantomjs-2.1.1-linux-x86_64/bin/phantomjs /usr/local/bin/
 else
   echo -e "${GREEN} [!] ${NC} phantomjs is already installed"    
+fi
+
+if [ ! -d /root/oscp ]; then
+  git clone https://github.com/sealmindset/oscp
 fi
