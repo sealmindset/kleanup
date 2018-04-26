@@ -98,9 +98,13 @@ apt-get autoclean
 apt-get autoremove
 
 echo -e "${GREEN} [*] ${NC} Now go hack something... (legally)"
-cd /root/oscp
 
-echo -e "${GREEN} [*] ${NC} Setting up Autologin... (legally)"
-sed -i '/^#.* AutomaticLogin/s/^#//' /etc/gdm3/daemon.conf
+if grep -q '^#.* AutomaticLogin' /etc/gdm3/daemon.conf; then
+  echo -e "${YELLOW} [!] ${NC} Setting up Autologin... (legally)"
+  sed -i '/^#.* AutomaticLogin/s/^#//' /etc/gdm3/daemon.conf
+  reboot
+else
+  echo -e "${GREEN} [*] ${NC} Autologin is already set."
+fi
 
-reboot
+echo -e "${GREEN} [*] ${NC} Now go hack something... (legally)"
