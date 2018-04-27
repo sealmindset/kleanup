@@ -11,7 +11,7 @@ if [ $(grep dist-upgrade /var/log/apt/history.log | wc -l) -lt 1 ]; then
 else
   echo -e "${GREEN} [!] ${NC} A Full Dist was already completed."
   if [ $(($(date +%s) - $(date +%s -r /var/log/apt/term.log))) -gt 3600 ]; then
-    echo -e "${YELLOW} [!] ${NC} Do a apt-get update"
+    echo -e "${YELLOW} [!] ${NC} Performing an apt-get update"
     apt-get update
   fi
 fi
@@ -30,6 +30,8 @@ function installAPT() {
       echo -e "${RED} [!!!] ${NC} ${j} cannot be installed using apt the method." 
     fi
 done
+apt-get autoclean
+apt-get autoremove
 }
 
 # Install bare
@@ -42,7 +44,6 @@ installAPT "${imgArray[@]}"
 
 trmArray=(terminator)
 installAPT "${trmArray[@]}"
-
 
 if [ $(type phantomjs | wc -l) -lt 1 ]; then
   echo -e "${YELLOW} [!] ${NC} Installing phantomjs!"
@@ -86,21 +87,39 @@ else
   git clone https://github.com/danielmiessler/SecLists.git
 fi
 
+if [ -f /usr/share/nmap/scripts/banner-plus.nse ]; then
+  echo -e "${GREEN} [*] ${NC} banner-plus.nse exist! " 
+else
+  echo -e "${YELLOW} [*] ${NC} Grabbing banner-plus.nse... " N
+  cd /root
+  git clone https://github.com/hdm/scan-tools.git
+  cp /root/scan-tools/nse/banner-plus.nse /usr/share/nmap/scripts/
+fi
+
+if [ -d /root/ptfp]; then
+  echo -e "${GREEN} [*] ${NC} PTF!"  
+else
+  echo -e "${YELLOW} [!] ${NC} Let's get some PTF!"  
+  cd /root
+  git clone https://github.com/trustedsec/ptf.git
+  echo -e "${YELLOW} [!] ${NC} At the prompt enter"  
+  echo -e "${YELLOW} [!] ${NC} use modules/install_updata_all"  
+  echo -e "${YELLOW} [!] ${NC} yes"  
+  cd /root/ptf
+./ptf
+fi
+
 if [ -d /root/oscp ]; then
-  echo -e "${GREEN} [*] ${NC} OSCP directory already exists!"  
+  echo -e "${GREEN} [*] ${NC} Updating OSCP!"  
+  git pull
 else
   echo -e "${YELLOW} [!] ${NC} Grabbing the OSCP toolbox!"
   cd /root
   git clone https://github.com/sealmindset/oscp
 fi
 
-apt-get autoclean
-apt-get autoremove
-
-echo -e "${GREEN} [*] ${NC} Now go hack something... (legally)"
-
 if grep -q '^#.* AutomaticLogin' /etc/gdm3/daemon.conf; then
-  echo -e "${YELLOW} [!] ${NC} Setting up Autologin... (legally)"
+  echo -e "${YELLOW} [!] ${NC} Setting up Autologin..."
   sed -i '/^#.* AutomaticLogin/s/^#//' /etc/gdm3/daemon.conf
   reboot
 else
