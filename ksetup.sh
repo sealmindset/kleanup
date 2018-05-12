@@ -37,12 +37,26 @@ function installAPT() {
     else
       echo -e "${RED} [!!!] ${NC} ${j} cannot be installed using apt the method." 
     fi
-done
+  done
+}
+
+function gitClone() {
+  arr=("$@")
+  for k in "${arr[@]}"; do
+    dirSTR=$(echo ${k} | sed 's/.*\///' | sed 's/\.git//')
+    if [ -d /root/recon/${dirSTR} ]; then
+      echo -e "${GREEN} [!] ${NC} Got ${dirSTR}"
+    else
+      echo -e "${YELLOW} [!] ${NC} Git'n ${k}"
+      git clone https://github.com/${k} /root/recon/${dirSTR}
+    fi
+    dirSTR=""
+  done
 }
 
 ####> Not quite PTF, but its the tools I'm using 
 
-aptArray=(hexchat terminator exploitdb exploitdb-papers exploitdb-bin-sploits golang-go)
+aptArray=(hexchat terminator exploitdb exploitdb-papers exploitdb-bin-sploits golang-go libesedb-utils gcc-mingw-w64-i686)
 installAPT "${aptArray[@]}"
 
 if [ $(type phantomjs | wc -l) -lt 1 ]; then
@@ -263,6 +277,35 @@ else
   git clone https://github.com/ChrisTruncer/EyeWitness
   cd /root/redteam/recon/EyeWitness/setup
   ./setup.sh
+fi
+
+if [ -d /root/redteam/recon/censys-subdomain-finder ]; then
+  echo -e "${GREEN} [*] ${NC} Censys.io!"  
+else
+  echo -e "${YELLOW} [!] ${NC} Git Censys.io!"
+  cd /root/redteam/recon/
+  git clone https://github.com/christophetd/censys-subdomain-finder
+  cd /root/redteam/recon/censys-subdomain-finder
+  pip install -r requirements.txt
+fi
+
+####> Red Team 
+
+rtArray=(hak5/bashbunny-payloads.git BloodHoundAD/BloodHound.git sekirkity/BrowserGather byt3bl33d3r/CrackMapExec.git leebaird/discover.git cheetz/Easy-P anshumanbh/git-all-secrets.git OJ/gobuster.git GreatSCT/GreatSCT.git cheetz/icmpshock danielbohannon/Invoke-Obfuscation.git danielbohannon/Invoke-CradleCrafter.git peewpw/Invoke-WCMDump.git nidem/kerberoast.git guelfoweb/knock.git blechschmidt/massdns.git putterpanda/mimikittenz.git codingo/NoSQLMap.git xorrior/RandomPS-Scripts.git fireeye/ReelPhish.git lgandx/Responder.git leostat/rtfm.git huntergregal/mimipenguin.git rebootuser/LinEnum.git mzet-/linux-exploit-suggester.git Arno0x/EmbedInHTML eladshamir/Internal-Monologue trustedsec/unicorn.git cheetz/generateJenkinsExploit.git sensepost/ruler.git danielmiessler/SecLists.git mdsecactivebreach/SharpShooter.git SimplySecurity/SimplyEmail.git trustedsec/social-engineer-toolkit.git smicallef/spiderfoot.git SpiderLabs/Spray.git TheRook/subbrute.git aboul3la/Sublist3r.git anshumanbh/tko-subs.git epinna/tplmap.git dxa4481/truffleHog.git trustedsec/unicorn.git Veil-Framework/Veil.git wifiphisher/wifiphisher.git GDSSecurity/Windows-Exploit-Suggester.git anshumanbh/tko-subs cyberspacekittens/bloodhound.git nahamsec/HostileSubBruteforcer.git JordyZomer/autoSubTakeover.git vulnersCom/nmap-vulners.git)
+
+gitClone "${rtArray[@]}"
+
+if [ -d /opt/smbexec ]; then
+  echo -e "${GREEN} [*] ${NC} Got smbexec!"  
+else
+  echo -e "${YELLOW} [!] ${NC} Grabbing smbexec!"
+  cd /root/recon
+  git clone https://github.com/brav0hax/smbexec.git
+  cd /root/recon/smbexec
+  apt-get install gcc-mingw-w64-i686 
+  apt-get install libesedb-utils
+  sed -i '/\/opt\/esedbtools\/esedbexport/s/\/opt\/esedbtools/\/usr\/bin/' /root/recon/smbexec/smbexec.yml 
+
 fi
 
 ####> My toolbag
