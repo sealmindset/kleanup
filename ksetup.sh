@@ -42,7 +42,7 @@ done
 
 ####> Not quite PTF, but its the tools I'm using 
 
-aptArray=(hexchat terminator exploitdb exploitdb-papers exploitdb-bin-sploits)
+aptArray=(hexchat terminator exploitdb exploitdb-papers exploitdb-bin-sploits golang-go)
 installAPT "${aptArray[@]}"
 
 if [ $(type phantomjs | wc -l) -lt 1 ]; then
@@ -214,6 +214,14 @@ else
   git clone https://github.com/Cn33liz/p0wnedShell
 fi
 
+if [ -d /root/redteam/powershell/nishang ]; then
+  echo -e "${GREEN} [*] ${NC} Got nishang!"  
+else
+  echo -e "${YELLOW} [!] ${NC} git nishang!"
+  cd /root/redteam/powershell
+  git clone https://github.com/samratashok/nishang
+fi
+
 if [ -d /root/redteam/powershell/PoshC2 ]; then
   echo -e "${GREEN} [*] ${NC} This PoshC2!"  
 else
@@ -231,7 +239,33 @@ else
   git clone https://github.com/friedrich/hans.git
   git clone https://github.com/jamesbarlow/icmptunnel
   git clone https://github.com/DhavalKapil/icmptunnel icmptunnel2
+  git clone https://github.com/Ne0nd0g/merlin
 fi
+
+####> Recon Tools 
+
+if [ -d /root/redteam/recon/httpscreenshot ]; then
+  echo -e "${GREEN} [*] ${NC} httpscreenshot!"  
+else
+  echo -e "${YELLOW} [!] ${NC} Git httpscreenshot!"
+  cd /root/redteam/recon/
+  git clone https://github.com/breenmachine/httpscreenshot
+  cd /root/redteam/recon/httpscreenhot
+  ./install-dependencies.sh
+  chmod +x *.py
+fi
+
+if [ -d /root/redteam/recon/EyeWitness ]; then
+  echo -e "${GREEN} [*] ${NC} EyeWitness!"  
+else
+  echo -e "${YELLOW} [!] ${NC} Git EyeWitness!"
+  cd /root/redteam/recon/
+  git clone https://github.com/ChrisTruncer/EyeWitness
+  cd /root/redteam/recon/EyeWitness/setup
+  ./setup.sh
+fi
+
+####> My toolbag
 
 if [ -d /root/oscp ]; then
   echo -e "${GREEN} [*] ${NC} Updating OSCP!"  
