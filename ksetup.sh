@@ -32,19 +32,14 @@ function installAPT() {
 done
 }
 
-# Install bare
-aptArray=(hexchat exploitdb exploitdb-papers exploitdb-bin-sploits)
+aptArray=(hexchat terminator exploitdb exploitdb-papers exploitdb-bin-sploits)
 installAPT "${aptArray[@]}"
-
-# Install PhantomJS & Imagemagick
-imgArray=(build-essential chrpath libxft-dev libfreetype6-dev libfreetype6 libfontconfig1-dev libfontconfig1 imagemagick)
-installAPT "${imgArray[@]}"
-
-trmArray=(terminator)
-installAPT "${trmArray[@]}"
 
 if [ $(type phantomjs | wc -l) -lt 1 ]; then
   echo -e "${YELLOW} [!] ${NC} Installing phantomjs!"
+  # Install PhantomJS & Imagemagick
+  imgArray=(build-essential chrpath libxft-dev libfreetype6-dev libfreetype6 libfontconfig1-dev libfontconfig1 imagemagick)
+installAPT "${imgArray[@]}"
   wget https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1-linux-x86_64.tar.bz2
   tar xvjf phantomjs-2.1.1-linux-x86_64.tar.bz2 -C /usr/local/share/
   ln -s /usr/local/share/phantomjs-2.1.1-linux-x86_64/bin/phantomjs /usr/local/bin/
