@@ -30,16 +30,14 @@ function installAPT() {
       echo -e "${RED} [!!!] ${NC} ${j} cannot be installed using apt the method." 
     fi
 done
-apt-get autoclean
-apt-get autoremove
 }
 
 # Install bare
-aptArray=(hexchat libssl1.0-dev exploitdb exploitdb-papers exploitdb-bin-sploits)
+aptArray=(hexchat exploitdb exploitdb-papers exploitdb-bin-sploits)
 installAPT "${aptArray[@]}"
 
 # Install PhantomJS & Imagemagick
-imgArray=(build-essential chrpath libssl-dev libxft-dev libfreetype6-dev libfreetype6 libfontconfig1-dev libfontconfig1 imagemagick)
+imgArray=(build-essential chrpath libxft-dev libfreetype6-dev libfreetype6 libfontconfig1-dev libfontconfig1 imagemagick)
 installAPT "${imgArray[@]}"
 
 trmArray=(terminator)
@@ -96,7 +94,25 @@ else
   cp /root/scan-tools/nse/banner-plus.nse /usr/share/nmap/scripts/
 fi
 
-if [ -d /root/ptfp]; then
+if [ -d /root/w3af ]; then
+  echo -e "${GREEN} [*] ${NC} w3af is installed! " 
+else
+  echo -e "${YELLOW} [*] ${NC} Grabbing w3af... " N
+  cd /root
+  git clone https://github.com/andresriancho/w3af.git
+
+w3afArray=(build-essential autoconf libtool pkg-config python-opengl python-imaging python-pyrex python-pyside.qtopengl idle-python2.7 qt4-dev-tools qt4-designer libqtgui4 libqtcore4 libqt4-xml libqt4-test libqt4-script libqt4-network libqt4-dbus python-qt4 python-qt4-gl libgle3 python-dev)
+installAPT "${w3afArray[@]}"
+w3af2Array=(libxml2-dev libxslt1-dev zlib1g-dev)
+installAPT "${w3af2Array[@]}"
+pip install lxml==3.4.4 scapy-real==2.2.0-dev guess-language==0.2 cluster==1.1.1b3 msgpack-python==0.4.4 python-ntlm==1.0.1 halberd==0.2.4 darts.util.lru==0.5 vulndb==0.0.19 markdown==2.6.1 psutil==2.2.1 ds-store==1.1.2 termcolor==1.1.0 mitmproxy==0.13 ruamel.ordereddict==0.4.8 Flask==0.10.1 tldextract==1.7.2 pebble==4.3.6 acora==2.1 esmre==0.3.1
+
+  cd w3af/
+./w3af_console
+. /tmp/w3af_dependency_install.sh
+fi
+
+if [ -d /root/ptf ]; then
   echo -e "${GREEN} [*] ${NC} PTF!"  
 else
   echo -e "${YELLOW} [!] ${NC} Let's get some PTF!"  
@@ -105,8 +121,36 @@ else
   echo -e "${YELLOW} [!] ${NC} At the prompt enter"  
   echo -e "${YELLOW} [!] ${NC} use modules/install_updata_all"  
   echo -e "${YELLOW} [!] ${NC} yes"  
-  cd /root/ptf
-./ptf
+fi
+
+if [ -f /usr/bin/pwsh ]; then
+  echo -e "${GREEN} [*] ${NC} PowerShell is installed! " 
+else
+  echo -e "${YELLOW} [*] ${NC} Grabbing PowerShell... " N
+  cd /root
+
+psArray=(libunwind8 liblttng-ust0)
+installAPT "${psArray[@]}"
+
+wget http://archive.ubuntu.com/ubuntu/pool/main/i/icu/libicu55_55.1-7_amd64.deb
+dpkg -i libicu55_55.1-7_amd64.deb
+
+wget https://github.com/PowerShell/PowerShell/releases/download/v6.0.2/powershell_6.0.2-1.debian.9_amd64.deb
+dpkg -i powershell_6.0.2-1.debian.9_amd64.deb
+
+  if [ -f /usr/bin/pwsh ]; then
+    echo -e "${GREEN} [*] ${NC} PowerShell is installed! " 
+  fi
+fi
+
+if [ -d /root/Empire ]; then
+  echo -e "${GREEN} [*] ${NC} Empire Strikes Back!"  
+else
+  echo -e "${YELLOW} [!] ${NC} Git Empire...!"  
+  pip install lxml==4.0.0
+  cd /root
+  git clone https://github.com/EmpireProject/Empire.git
+  cd /root/Empire/setup
 fi
 
 if [ -d /root/oscp ]; then
@@ -121,9 +165,15 @@ fi
 if grep -q '^#.* AutomaticLogin' /etc/gdm3/daemon.conf; then
   echo -e "${YELLOW} [!] ${NC} Setting up Autologin..."
   sed -i '/^#.* AutomaticLogin/s/^#//' /etc/gdm3/daemon.conf
-  reboot
 else
   echo -e "${GREEN} [*] ${NC} Autologin is already set."
+fi
+
+if grep -q '^disable_lua\ \= false' /etc/wireshark/init.lua; then
+  echo -e "${YELLOW} [!] ${NC} Setting Wireshark lua to true..."
+  sed -i '/^disable_lua\ \= false/s/false/true/' /etc/wireshark/init.lua
+else
+  echo -e "${GREEN} [*] ${NC} Wireshark lua is already set."
 fi
 
 echo -e "${GREEN} [*] ${NC} Now go hack something... (legally)"
