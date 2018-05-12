@@ -108,7 +108,7 @@ pip install lxml==3.4.4 scapy-real==2.2.0-dev guess-language==0.2 cluster==1.1.1
 fi
 
 if [ -d /root/ptf ]; then
-  echo -e "${GREEN} [*] ${NC} PTF!"  
+  echo -e "${GREEN} [*] ${NC} Got PTF!"  
 else
   echo -e "${YELLOW} [!] ${NC} Let's get some PTF!"  
   cd /root
@@ -124,14 +124,14 @@ else
   echo -e "${YELLOW} [*] ${NC} Grabbing PowerShell... " N
   cd /root
 
-psArray=(libunwind8 liblttng-ust0)
-installAPT "${psArray[@]}"
+  psArray=(libunwind8 liblttng-ust0)
+  installAPT "${psArray[@]}"
 
-wget http://archive.ubuntu.com/ubuntu/pool/main/i/icu/libicu55_55.1-7_amd64.deb
-dpkg -i libicu55_55.1-7_amd64.deb
+  wget http://archive.ubuntu.com/ubuntu/pool/main/i/icu/libicu55_55.1-7_amd64.deb
+  dpkg -i libicu55_55.1-7_amd64.deb
 
-wget https://github.com/PowerShell/PowerShell/releases/download/v6.0.2/powershell_6.0.2-1.debian.9_amd64.deb
-dpkg -i powershell_6.0.2-1.debian.9_amd64.deb
+  wget https://github.com/PowerShell/PowerShell/releases/download/v6.0.2/powershell_6.0.2-1.debian.9_amd64.deb
+  dpkg -i powershell_6.0.2-1.debian.9_amd64.deb
 
   if [ -f /usr/bin/pwsh ]; then
     echo -e "${GREEN} [*] ${NC} PowerShell is installed! " 
@@ -146,6 +146,38 @@ else
   cd /root
   git clone https://github.com/EmpireProject/Empire.git
   cd /root/Empire/setup
+  ./install.sh
+  ./reset.sh
+fi
+
+if [ -d /root/dnscat2 ]; then
+  echo -e "${GREEN} [*] ${NC} Meow!"  
+else
+  echo -e "${YELLOW} [!] ${NC} Git some pussy...!"  
+  dnsArray=(ruby-dev gcc)
+  installAPT "${dnsArray[@]}"
+  cd /root
+  git clone https://github.com/iagox86/dnscat2.git
+  cd /root/dnscat2/server/  
+  make  
+  gem install bundler
+  bundle install  
+  cd /root/dnscat2/client/  
+  make
+  echo -e "${GREEN} [!] ${NC} Test it: ruby ./dnscat2.rb"
+fi
+
+if [ $(type code | wc -l) -lt 1 ]; then
+  # REM: http://www.rafaelhart.com/2017/08/install-visual-studio-code-on-kali-linux/
+  echo -e "${YELLOW} [!] ${NC} Visual Studio must be installed!"
+  curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.gpg
+  mv microsoft.gpg /etc/apt/trusted.gpg.d/microsoft.gpg
+  echo "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main" > /etc/apt/sources.list.d/vscode.list
+  apt update && apt install code
+  echo -e "${YELLOW} [!] ${NC} Run: code --user-data-dir=\"~/.vscode-root\""
+else
+  echo -e "${GREEN} [*] ${NC} We have Visual Studio installed!!"  
+  echo -e "${YELLOW} [!] ${NC} Run: code --user-data-dir=\"~/.vscode-root\""
 fi
 
 if [ -d /root/oscp ]; then
