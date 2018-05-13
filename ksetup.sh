@@ -54,15 +54,25 @@ function gitClone() {
   done
 }
 
+
+function installPIP() {
+  arr=("$@")
+  for l in "${arr[@]}";  do
+    echo -e "${YELLOW} [!] ${NC} Installing ${l}!"
+    pip install ${l}
+  done
+}
+
 ####> Not quite PTF, but its the tools I'm using 
 
 aptArray=(hexchat terminator exploitdb exploitdb-papers exploitdb-bin-sploits golang-go libesedb-utils gcc-mingw-w64-i686)
-
 installAPT "${aptArray[@]}"
 
-aptArray=(veil)
-
+aptArray=(veil jython jruby)
 installAPT "${aptArray[@]}"
+
+pipArray=(reconf python-nmap)
+installPIP "${pipArray[@]}"
 
 if [ $(type phantomjs | wc -l) -lt 1 ]; then
   echo -e "${YELLOW} [!] ${NC} Installing phantomjs!"
