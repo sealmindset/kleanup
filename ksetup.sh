@@ -188,6 +188,15 @@ else
   ./reset.sh
 fi
 
+if [ -d /opt/trevorc2 ]; then
+  echo -e "${GREEN} [*] ${NC} Hi Dave!"  
+else
+  echo -e "${YELLOW} [!] ${NC} Git trevorc2...!"  
+  git clone https://github.com/trustedsec/trevorc2.git
+  cd /opt/trevorc2
+  pip install -r requirements.txt
+fi
+
 if [ -d /opt/dnscat2 ]; then
   echo -e "${GREEN} [*] ${NC} Meow!"  
 else
