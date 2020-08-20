@@ -14,6 +14,8 @@ if [ $version = "Rolling" ]; then
   else
     apt-get install linux-headers-4.3.0-kali-all
   fi
+else
+  echo 'Version: $version'
 fi
 if [ $(type deborphan | wc -l) -lt 1 ]; then
   echo 'deborphan is not installed.'
